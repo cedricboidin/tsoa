@@ -64,6 +64,8 @@ export interface TestModel extends Model {
   singleFloatLiteralType?: 3.1415;
   dateValue?: Date;
   optionalString?: string;
+  optionalString2: string | undefined;
+  optionalUnion: 'String' | 1 | 20.0 | true | false | undefined;
   anyType?: any;
   unknownType?: unknown;
   genericTypeObject?: Generic<{ foo: string; bar: boolean }>;

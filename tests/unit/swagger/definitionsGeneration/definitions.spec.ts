@@ -446,6 +446,26 @@ describe('Definition generation', () => {
             expect(propertySchema).to.not.haveOwnProperty('additionalProperties', `for property ${propertyName}`);
             expect(propertySchema).to.not.haveOwnProperty('format', `for property ${propertyName}`);
           },
+          optionalString2: (propertyName, propertySchema) => {
+            // should generate an optional property from an optional property
+            expect(propertySchema.type).to.eq('string', `for property ${propertyName}.type`);
+            expect(propertySchema['x-nullable']).to.eq(undefined, `for property ${propertyName}[x-nullable]`);
+            expect(propertySchema).to.not.haveOwnProperty('additionalProperties', `for property ${propertyName}`);
+            expect(propertySchema).to.not.haveOwnProperty('format', `for property ${propertyName}`);
+          },
+          optionalUnion: (propertyName, propertySchema) => {
+            expect(propertySchema.type).to.eq('string', `for property ${propertyName}.type`);
+            expect(propertySchema['x-nullable']).to.eq(false, `for property ${propertyName}[x-nullable]`);
+            if (!propertySchema.enum) {
+              throw new Error(`There was no 'enum' property on ${propertyName}.`);
+            }
+            expect(propertySchema.enum).to.have.length(5, `for property ${propertyName}.enum`);
+            expect(propertySchema.enum).to.include('String', `for property ${propertyName}.enum`);
+            expect(propertySchema.enum).to.include('1', `for property ${propertyName}.enum`);
+            expect(propertySchema.enum).to.include('20', `for property ${propertyName}.enum`);
+            expect(propertySchema.enum).to.include('true', `for property ${propertyName}.enum`);
+            expect(propertySchema.enum).to.include('false', `for property ${propertyName}.enum`);
+          },
           anyType: (propertyName, propertySchema) => {
             expect(propertySchema.type).to.eq(undefined, `for property ${propertyName}`);
             expect(propertySchema['x-nullable']).to.eq(undefined, `for property ${propertyName}[x-nullable]`);

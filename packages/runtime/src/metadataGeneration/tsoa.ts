@@ -107,11 +107,12 @@ export namespace Tsoa {
     | 'refAlias'
     | 'nestedObjectLiteral'
     | 'union'
+    | 'optional'
     | 'intersection';
 
   export type RefTypeLiteral = 'refObject' | 'refEnum' | 'refAlias';
 
-  export type PrimitiveTypeLiteral = Exclude<TypeStringLiteral, RefTypeLiteral | 'enum' | 'array' | 'void' | 'nestedObjectLiteral' | 'union' | 'intersection'>;
+  export type PrimitiveTypeLiteral = Exclude<TypeStringLiteral, RefTypeLiteral | 'enum' | 'array' | 'void' | 'nestedObjectLiteral' | 'union' | 'intersection' | 'optional'>;
 
   export interface TypeBase {
     dataType: TypeStringLiteral;
@@ -138,6 +139,7 @@ export namespace Tsoa {
     | RefAliasType
     | NestedObjectLiteralType
     | UnionType
+    | OptionalType
     | IntersectionType;
 
   export interface StringType extends TypeBase {
@@ -247,6 +249,11 @@ export namespace Tsoa {
   export interface UnionType extends TypeBase {
     dataType: 'union';
     types: Type[];
+  }
+
+  export interface OptionalType extends TypeBase {
+    dataType: 'optional';
+    type: Type;
   }
 
   export interface IntersectionType extends TypeBase {

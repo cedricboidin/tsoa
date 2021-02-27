@@ -508,6 +508,8 @@ describe('Koa Server (with noImplicitAdditionalProperties turned on)', () => {
       object: { foo: 'bar' },
       objectArray: [{ foo1: 'bar1' }, { foo2: 'bar2' }],
       optionalString: 'test1234',
+      optionalString2: 'test1234',
+      optionalUnion: 'String',
       or: { value1: 'Foo' },
       referenceAnd: { value1: 'foo', value2: 'bar' },
       strLiteralArr: ['Foo', 'Bar'],

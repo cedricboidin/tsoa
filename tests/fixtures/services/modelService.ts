@@ -26,6 +26,8 @@ export class ModelService {
         },
       ],
       optionalString: 'optional string',
+      optionalString2: 'optional string 2',
+      optionalUnion: 'String',
       or: { value2: 'bar' },
       referenceAnd: { value1: 'foo', value2: 'bar' },
       strLiteralArr: ['Foo', 'Bar'],

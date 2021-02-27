@@ -39,6 +39,8 @@ export class GetTestController extends Controller {
       },
     ],
     optionalString: 'optional string',
+    optionalString2: 'optional string 2',
+    optionalUnion: 'String',
     or: { value1: 'Foo' },
     referenceAnd: { value1: 'foo', value2: 'bar' },
     strLiteralArr: ['Foo', 'Bar'],

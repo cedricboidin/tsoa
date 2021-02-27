@@ -78,6 +78,8 @@ export abstract class SpecGenerator {
       return this.getSwaggerTypeForIntersectionType(type);
     } else if (type.dataType === 'nestedObjectLiteral') {
       return this.getSwaggerTypeForObjectLiteral(type);
+    } else if (type.dataType === 'optional') {
+      throw new Error('optional cannot become type');
     } else {
       return assertNever(type);
     }

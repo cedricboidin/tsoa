@@ -57,15 +57,34 @@ export class TypeResolver {
     }
 
     if (ts.isUnionTypeNode(this.typeNode)) {
-      const types = this.typeNode.types.map(type => {
-        return new TypeResolver(type, this.current, this.parentNode, this.context).resolve();
-      });
+      const notUndef = [...this.typeNode.types].filter(type => type.kind !== ts.SyntaxKind.UndefinedKeyword);
+      if (notUndef.length !== this.typeNode.types.length) {
+        if (notUndef.length === 1) {
+          const type = notUndef[0];
+          const optionalType: Tsoa.OptionalType = {
+            dataType: 'optional',
+            type: new TypeResolver(type, this.current, this.parentNode, this.context).resolve(),
+          };
+          return optionalType;
+        } else {
+          const filteredUnion: ts.UnionTypeNode = ts.factory.createUnionTypeNode(notUndef);
+          const optionalType: Tsoa.OptionalType = {
+            dataType: 'optional',
+            type: new TypeResolver(filteredUnion, this.current, this.parentNode, this.context).resolve(),
+          };
+          return optionalType;
+        }
+      } else {
+        const types = this.typeNode.types.map(type => {
+          return new TypeResolver(type, this.current, this.parentNode, this.context).resolve();
+        });
 
-      const unionMetaType: Tsoa.UnionType = {
-        dataType: 'union',
-        types,
-      };
-      return unionMetaType;
+        const unionMetaType: Tsoa.UnionType = {
+          dataType: 'union',
+          types,
+        };
+        return unionMetaType;
+      }
     }
 
     if (ts.isIntersectionTypeNode(this.typeNode)) {
@@ -869,6 +888,12 @@ export class TypeResolver {
       required = false;
     }
 
+    let type = new TypeResolver(propertySignature.type, this.current, propertySignature.type.parent, this.context, propertySignature.type).resolve();
+    if (type.dataType === 'optional') {
+      required = false;
+      type = type.type;
+    }
+
     const property: Tsoa.Property = {
       default: getJSDocComment(propertySignature, 'default'),
       description: this.getNodeDescription(propertySignature),
@@ -876,7 +901,7 @@ export class TypeResolver {
       format: this.getNodeFormat(propertySignature),
       name: identifier.text,
       required,
-      type: new TypeResolver(propertySignature.type, this.current, propertySignature.type.parent, this.context, propertySignature.type).resolve(),
+      type: type,
       validators: getPropertyValidators(propertySignature) || {},
     };
     return property;

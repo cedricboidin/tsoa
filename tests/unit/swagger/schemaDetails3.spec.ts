@@ -921,6 +921,26 @@ describe('Definition generation for OpenAPI 3.0.0', () => {
             expect(propertySchema).to.not.haveOwnProperty('additionalProperties', `for property ${propertyName}`);
             expect(propertySchema).to.not.haveOwnProperty('format', `for property ${propertyName}`);
           },
+          optionalString2: (propertyName, propertySchema) => {
+            // should generate an optional property from an optional property
+            expect(propertySchema.type).to.eq('string', `for property ${propertyName}.type`);
+            expect(propertySchema.nullable).to.eq(undefined, `for property ${propertyName}.nullable`);
+            expect(propertySchema).to.not.haveOwnProperty('additionalProperties', `for property ${propertyName}`);
+            expect(propertySchema).to.not.haveOwnProperty('format', `for property ${propertyName}`);
+          },
+          optionalUnion: (propertyName, propertySchema) => {
+            expect(propertySchema).to.deep.eq({
+              anyOf: [
+                { type: 'string', enum: ['String'] },
+                { type: 'number', enum: ['1', '20'] },
+                { type: 'boolean', enum: ['true', 'false'] },
+              ],
+              default: undefined,
+              description: undefined,
+              example: undefined,
+              format: undefined,
+            });
+          },
           anyType: (propertyName, propertySchema) => {
             expect(propertySchema.type).to.eq(undefined, `for property ${propertyName}`);
             expect(propertySchema.nullable).to.eq(undefined, `for property ${propertyName}.nullable`);
